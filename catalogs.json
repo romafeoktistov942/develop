@@ -1,0 +1,31 @@
+[
+    {
+        "model": "catalog.product",
+        "pk": 3,
+        "fields": {
+            "name": "Люстра",
+            "description": "Осветительный прибор",
+            "image": "",
+            "category": 2,
+            "price": 2990.0,
+            "created_at": "2024-09-05T16:44:25.582Z",
+            "updated_at": "2024-09-05T16:44:25.582Z"
+        }
+    },
+    {
+        "model": "catalog.category",
+        "pk": 1,
+        "fields": {
+            "name": "Кухонная техника",
+            "description": "Техника для кухни например: Чайник, Микроволновая печь и тд."
+        }
+    },
+    {
+        "model": "catalog.category",
+        "pk": 2,
+        "fields": {
+            "name": "Освещение",
+            "description": "Лампочки, люстры, светодиодные ленты и тд."
+        }
+    }
+]
