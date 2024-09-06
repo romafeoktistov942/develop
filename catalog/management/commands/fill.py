@@ -8,13 +8,13 @@ from catalog.models import Category, Product
 class Command(BaseCommand):
     @staticmethod
     def json_read_categories():
-        with open("/Users/roman/project_5/catalogs.json", encoding="utf-8") as file:
+        with open("catalogs.json", encoding="utf-8") as file:
             data = json.load(file)
         return [item for item in data if item["model"] == "catalog.category"]
 
     @staticmethod
     def json_read_products():
-        with open("/Users/roman/project_5/catalogs.json", encoding="utf-8") as file:
+        with open("catalogs.json", encoding="utf-8") as file:
             data = json.load(file)
         return [item for item in data if item["model"] == "catalog.product"]
 
