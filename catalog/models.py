@@ -55,6 +55,9 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
+    views_counter = models.PositiveBigIntegerField(
+        verbose_name="Количество просмотров", default=0
+    )
 
     class Meta:
         verbose_name = "Товар"
@@ -62,3 +65,27 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Version(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="product",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Продукт",
+    )
+
+    number = models.PositiveIntegerField(verbose_name="Номер версии")
+
+    name = models.CharField(max_length=150, verbose_name="Название версии")
+
+    is_active = models.BooleanField(verbose_name="Признак текущей версии")
+
+    class Meta:
+        verbose_name = "Версия"
+        verbose_name_plural = "Версии"
+
+    def __str__(self):
+        return f"{self.number} - {self.name}"
