@@ -52,7 +52,7 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", null=True, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name="Владелец", null=True, blank=True)
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name="Дата последнего изменения",
