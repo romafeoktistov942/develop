@@ -19,6 +19,12 @@ class ProductForm(StyleFormMixin, ModelForm):
         model = Product
         exclude = ("views_counter",)
 
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            if self.request:
+                self.fields['owner'].initial = self.request.user
+
+
     def clean_name(self):
         name = self.cleaned_data["name"]
         self.validate_text(name, "name")
