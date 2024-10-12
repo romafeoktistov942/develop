@@ -17,12 +17,8 @@ class StyleFormMixin:
 class ProductForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Product
-        exclude = ("views_counter",)
+        exclude = ("views_counter", "owner")
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            if self.request:
-                self.fields['owner'].initial = self.request.user
 
 
     def clean_name(self):
