@@ -28,12 +28,12 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:products_list")
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        return kwargs
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
         return super().form_valid(form)
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
