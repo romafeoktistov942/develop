@@ -2,6 +2,8 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+from users.models import User
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name="Наименование")
@@ -50,7 +52,7 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
-
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", null=True, blank=True)
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name="Дата последнего изменения",
