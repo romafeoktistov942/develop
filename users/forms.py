@@ -12,4 +12,4 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
 
 
 class PasswordResetForm(forms.Form):
-    email = forms.EmailField(label='Email')
+    email = forms.EmailField(label="Email")
