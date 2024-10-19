@@ -17,9 +17,19 @@ class StyleFormMixin:
 class ProductForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Product
-        exclude = ("views_counter", "owner")
+        exclude = (
+            "views_counter",
+            "owner",
+            "is_published",
+            "category",
+            "description",
+        )
 
 
+class ProductModeratorForm(StyleFormMixin, ModelForm):
+    class Meta:
+        model = Product
+        fields = ("description", "category", "is_published")
 
     def clean_name(self):
         name = self.cleaned_data["name"]
@@ -32,10 +42,22 @@ class ProductForm(StyleFormMixin, ModelForm):
         return description
 
     def validate_text(self, text, field_name):
-        forbidden_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция", "радар"]
+        forbidden_words = [
+            "казино",
+            "криптовалюта",
+            "крипта",
+            "биржа",
+            "дешево",
+            "бесплатно",
+            "обман",
+            "полиция",
+            "радар",
+        ]
         for word in forbidden_words:
             if word in text.lower():
-                raise ValidationError(f"Поле '{field_name}' содержит запрещенное слово '{word}'")
+                raise ValidationError(
+                    f"Поле '{field_name}' содержит запрещенное слово '{word}'"
+                )
 
 
 class VersionForm(StyleFormMixin, ModelForm):
@@ -45,9 +67,8 @@ class VersionForm(StyleFormMixin, ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        instance.version_number = self.cleaned_data['version_number']
-        instance.version_name = self.cleaned_data['version_name']
+        instance.version_number = self.cleaned_data["version_number"]
+        instance.version_name = self.cleaned_data["version_name"]
         if commit:
             instance.save()
         return instance
-   
