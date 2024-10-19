@@ -52,7 +52,13 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name="Владелец", null=True, blank=True)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        verbose_name="Владелец",
+        null=True,
+        blank=True,
+    )
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name="Дата последнего изменения",
@@ -62,6 +68,29 @@ class Product(models.Model):
     views_counter = models.PositiveBigIntegerField(
         verbose_name="Количество просмотров", default=0
     )
+    is_published = models.BooleanField(
+        default=False, verbose_name="опубликовано"
+    )
+    slug = models.CharField(
+        max_length=150, verbose_name="slug", null=True, blank=True
+    )
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="owned_products",
+    )
+    manufacturer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="manufactured_products"
+    )
+    manufacturer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Производитель",
+        null=True,
+        blank=True,
+    )
+
     @property
     def active_versions(self):
         return self.versions.filter(is_active=True)
@@ -69,6 +98,11 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+        permissions = [
+            ("can_edit_category", "Can edit category"),
+            ("can_edit_description", "Can edit description"),
+            ("can_edit_is_published", "Can edit is_published"),
+        ]
 
     def __str__(self):
         return self.name
@@ -86,10 +120,12 @@ class Version(models.Model):
 
     version_number = models.PositiveIntegerField(verbose_name="Номер версии")
 
-    version_name = models.CharField(max_length=150, verbose_name="Название версии")
+    version_name = models.CharField(
+        max_length=150, verbose_name="Название версии"
+    )
 
     is_active = models.BooleanField(verbose_name="Признак текущей версии")
-   
+
     def save(self, *args, **kwargs):
         print("Сохраняем версию...")
         if not self.product.versions.filter(is_active=True).exists():
@@ -112,7 +148,7 @@ class Version(models.Model):
 
     def __str__(self):
         return f"{self.product} {self.version_number} {self.version_name} {self.is_active}"
-    
+
     @receiver(post_save, sender=Product)
     def set_default_version(sender, instance, created, **kwargs):
         if created and not instance.versions.exists():
@@ -120,10 +156,13 @@ class Version(models.Model):
             Version.objects.create(
                 product=instance,
                 version_number=1,
-                version_name='Версия по умолчанию',
-                is_active=True
+                version_name="Версия по умолчанию",
+                is_active=True,
             )
-        elif instance.versions.exists() and not instance.versions.filter(is_active=True).exists():
+        elif (
+            instance.versions.exists()
+            and not instance.versions.filter(is_active=True).exists()
+        ):
             # Если нет активных версий, устанавливаем последнюю версию как активную
             instance.versions.last().is_active = True
             instance.versions.last().save()
