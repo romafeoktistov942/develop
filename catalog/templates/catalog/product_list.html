@@ -12,27 +12,31 @@
                         <p class="card-text"> {{ product.name }}</p>
                         <div class="d-flex">
                             {% if product.versions.all %}
-                                {% for version in product.versions.all %}
-                                    {% if version.is_active %}
-                                        <p>Версия: {{ version.version_number }} Название: {{ version.version_name }}</p>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if not product.active_versions %}
-                                    <p>{{product.versions.all}}</p>
-                                    <p>Все версии неактивны.</p>
-                                {% endif %}
+                            {% for version in product.versions.all %}
+                            {% if version.is_active %}
+                            <p>Версия: {{ version.version_number }} Название: {{ version.version_name }}</p>
+                            {% endif %}
+                            {% endfor %}
+                            {% if not product.active_versions %}
+                            <p>{{product.versions.all}}</p>
+                            <p>Все версии неактивны.</p>
+                            {% endif %}
                             {% else %}
-                                <p>У продукта нет версий.</p>
+                            <p>У продукта нет версий.</p>
                             {% endif %}
                         </div>
                         <div class="d-flex justify-content-center align-items-center">
                             <div class="btn-group">
-                                <a class="btn btn-primary" href="{% url 'catalog:products_detail' product.pk %}"
-                                    role="button">Посмотреть</a>
+                                {% if perms.catalog.can_edit_is_published and perms.catalog.can_edit_description and
+                                perms.catalog.can_edit_category or user == product.manufacturer %}
                                 <a class="btn btn-primary" href="{% url 'catalog:products_update' product.pk %}"
                                     role="button">Редактировать</a>
-                                <a class="btn btn-primary" href="{% url 'catalog:products_delete' product.pk %}"
-                                    role="button">Удалить</a>
+                                {% endif %}
+                                <a class="btn btn-primary" href="{% url 'catalog:products_detail' product.pk %}"
+                                    role="button">Посмотреть</a>
+
+                                <!-- <a class="btn btn-primary" href="{% url 'catalog:products_delete' product.pk %}"
+                                    role="button">Удалить</a> -->
                             </div>
                         </div>
                     </div>
