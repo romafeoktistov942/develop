@@ -1,4 +1,3 @@
-from typing import Any
 from django.forms import BooleanField, ModelForm, ValidationError
 
 from catalog.models import Product, Version
