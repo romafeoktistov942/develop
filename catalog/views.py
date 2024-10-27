@@ -12,7 +12,8 @@ from django.views.generic import (
 )
 
 from catalog.forms import ProductForm, ProductModeratorForm, VersionForm
-from .models import Product, Version
+from catalog.services import get_categories_from_cache
+from .models import Product, Version, Category
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -120,3 +121,14 @@ class VersionUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+class CategoryListView(LoginRequiredMixin, ListView):
+    """
+    Контроллер, который отвечает за отображение списка категорий
+    """
+
+    model = Category
+
+    def get_queryset(self):
+        return get_categories_from_cache()
